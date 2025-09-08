@@ -9,6 +9,8 @@ An online coat of arms editor for Crusader Kings III, inspired by the in-game ed
 
 This tool allows users to easily create, edit, and manage custom coat of arms for Crusader Kings III directly from their browser.
 
+This is a **fan-made** project
+
 ## Technical Setup
 
 ### Prerequisites
