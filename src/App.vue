@@ -1344,6 +1344,13 @@ function isTransformerTarget(konvaTarget) {
   gap: 12px;
   width: 100%;
 }
+
+.canvas-box {
+  width: 400px;
+  height: 400px;
+  background: white;
+  outline: 6px solid #ccb115;
+}
 .lang-switcher {
   margin-left: auto;
   position: relative;
