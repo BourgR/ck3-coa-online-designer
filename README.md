@@ -5,6 +5,7 @@ An online coat of arms editor for Crusader Kings III, inspired by the in-game ed
 - Copy and paste functionality
 - Drag & drop for emblems
 - Import and export coat of arms to and from the game using textual format
+- Preview the coat of arms for all available governments (feudal, clan, tribal, nomad, etc)
 - And more enhancements to streamline the design process
 
 This tool allows users to easily create, edit, and manage custom coat of arms for Crusader Kings III directly from their browser.
