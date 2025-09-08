@@ -1,34 +1,45 @@
-# CK3_COAT_online_designer
+# CK3 COA Online Designer
 
-This template should help get you started developing with Vue 3 in Vite.
+An online coat of arms editor for Crusader Kings III, inspired by the in-game editor but with additional features:
+- Native support for masks
+- Copy and paste functionality
+- Drag & drop for emblems
+- Import and export coat of arms to and from the game using textual format
+- And more enhancements to streamline the design process
 
-## Recommended IDE Setup
+This tool allows users to easily create, edit, and manage custom coat of arms for Crusader Kings III directly from their browser.
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+## Technical Setup
 
-## Customize configuration
+### Prerequisites
+- [Node.js](https://nodejs.org/) (version 14 or higher recommended)
+- [npm](https://www.npmjs.com/)
 
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
+### Installation
 
 ```sh
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+### Development Server
+
+Start the development server with hot-reload:
 
 ```sh
 npm run dev
 ```
 
-### Compile and Minify for Production
+### Production Build
+
+Compile and minify for production:
 
 ```sh
 npm run build
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+### Linting
+
+Check and fix code style with ESLint:
 
 ```sh
 npm run lint
