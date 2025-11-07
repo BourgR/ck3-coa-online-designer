@@ -106,11 +106,11 @@
 
         <VueSelect v-model="selectedMask" :options="governmentList" :isClearable=false>
           <template #option="{ option }">
-            <img :src="`/interface/government/${option.icon}`" alt="" width="24" height="24"/>
+            <img :src="`${option.icon}`" alt="" width="24" height="24"/>
             {{ $t('government_' + option.value) }}
           </template>
           <template #value="{ option }">
-            <img :src="`/interface/government/${option.icon}`" alt="" width="24" height="24"/>
+            <img :src="`${option.icon}`" alt="" width="24" height="24"/>
             {{ $t('government_' + option.value) }}
           </template>
         </VueSelect>
@@ -185,11 +185,13 @@ import VueSelect from "vue3-select-component";
 import "vue3-select-component/styles";
 
 // Utilise les chemins du dossier public
-const housePng = import.meta.env.BASE_URL + 'coat_of_arms/interface/house.png'
-const houseMaskPng = import.meta.env.BASE_URL + 'coat_of_arms/interface/house_mask.png'
-const titlePng = import.meta.env.BASE_URL + 'coat_of_arms/interface/title.png'
-const titleMaskPng = import.meta.env.BASE_URL + 'coat_of_arms/interface/title_mask.png'
-const topFramePng = import.meta.env.BASE_URL + 'coat_of_arms/interface/topframe.png'
+const baseURL = import.meta.env.BASE_URL
+const housePng = baseURL + 'coat_of_arms/interface/house.png'
+const houseMaskPng = baseURL + 'coat_of_arms/interface/house_mask.png'
+const titlePng = baseURL + 'coat_of_arms/interface/title.png'
+const titleMaskPng = baseURL + 'coat_of_arms/interface/title_mask.png'
+const topFramePng = baseURL + 'coat_of_arms/interface/topframe.png'
+const governmentIconPathBase = baseURL + 'interface/government/'
 
 const props = defineProps({
   canvasSize: Object,
@@ -210,22 +212,22 @@ const defaultCoatWidth = 128
 const defaultCoatHeight = 128
 
 const governmentList = ref([
-    {value: 'default', icon: 'feudal.png'},
-    {value: 'administrative', icon: 'administrative.png'},
-    {value: 'celestial', icon: 'celestial.png'},
-    {value: 'clan', icon: 'clan.png'},
-    {value: 'herder', icon: 'herder.png'},
-    {value: 'japan_administrative', icon: 'japan_administrative.png'},
-    {value: 'japan_feudal', icon: 'japan_feudal.png'},
-    {value: 'landless', icon: 'landless_adventurer.png'},
-    {value: 'mandala', icon: 'mandala.png'},
-    {value: 'meritocratic', icon: 'meritocratic.png'},
-    {value: 'nomad', icon: 'nomad.png'},
-    {value: 'republic', icon: 'republic.png'},
-    {value: 'theocracy', icon: 'theocracy.png'},
-    {value: 'tribal', icon: 'tribal.png'},
-    {value: 'steppe_admin', icon: 'steppe_admin.png'},
-    {value: 'wanua', icon: 'wanua.png'}
+    {value: 'default', icon: governmentIconPathBase + 'feudal.png'},
+    {value: 'administrative', icon: governmentIconPathBase + 'administrative.png'},
+    {value: 'celestial', icon: governmentIconPathBase + 'celestial.png'},
+    {value: 'clan', icon: governmentIconPathBase + 'clan.png'},
+    {value: 'herder', icon: governmentIconPathBase + 'herder.png'},
+    {value: 'japan_administrative', icon: governmentIconPathBase + 'japan_administrative.png'},
+    {value: 'japan_feudal', icon: governmentIconPathBase + 'japan_feudal.png'},
+    {value: 'landless', icon: governmentIconPathBase + 'landless_adventurer.png'},
+    {value: 'mandala', icon: governmentIconPathBase + 'mandala.png'},
+    {value: 'meritocratic', icon: governmentIconPathBase + 'meritocratic.png'},
+    {value: 'nomad', icon: governmentIconPathBase + 'nomad.png'},
+    {value: 'republic', icon: governmentIconPathBase + 'republic.png'},
+    {value: 'theocracy', icon: governmentIconPathBase + 'theocracy.png'},
+    {value: 'tribal', icon: governmentIconPathBase + 'tribal.png'},
+    {value: 'steppe_admin', icon: governmentIconPathBase + 'steppe_admin.png'},
+    {value: 'wanua', icon: governmentIconPathBase + 'wanua.png'}
 ]);
 
 const selectedMask = ref('default')
