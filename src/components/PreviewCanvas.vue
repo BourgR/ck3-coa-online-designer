@@ -106,11 +106,11 @@
 
         <VueSelect v-model="selectedMask" :options="governmentList" :isClearable=false>
           <template #option="{ option }">
-            <img :src="`/public/interface/government/${option.icon}`" alt="" width="24" height="24"/>
+            <img :src="`/interface/government/${option.icon}`" alt="" width="24" height="24"/>
             {{ $t('government_' + option.value) }}
           </template>
           <template #value="{ option }">
-            <img :src="`/public/interface/government/${option.icon}`" alt="" width="24" height="24"/>
+            <img :src="`/interface/government/${option.icon}`" alt="" width="24" height="24"/>
             {{ $t('government_' + option.value) }}
           </template>
         </VueSelect>
