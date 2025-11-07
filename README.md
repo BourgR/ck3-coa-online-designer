@@ -12,10 +12,12 @@ This tool allows users to easily create, edit, and manage custom coat of arms fo
 
 This is a **fan-made** project
 
+Try it out -> [HERE](https://bacchurion.github.io/ck3-coa-online-designer/) <-
+
 ## Technical Setup
 
 ### Prerequisites
-- [Node.js](https://nodejs.org/) (version 14 or higher recommended)
+- [Node.js](https://nodejs.org/) (version 24 or higher recommended)
 - [npm](https://www.npmjs.com/)
 
 ### Installation
