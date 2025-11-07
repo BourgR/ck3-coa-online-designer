@@ -103,28 +103,18 @@
     <div class="dropbox-container">
       <div class="mask-select-col">
         <label for="mask-select" class="mask-label">{{ $t('government_type') }}</label>
-        <select
-          id="mask-select"
-          v-model="selectedMask"
-          class="form-select mask-select"
-        >
-          <option value="default">{{ $t('government_default') }}</option>
-          <option value="administrative">{{ $t('government_administrative') }}</option>
-          <option value="celestial">{{ $t('government_celestial') }}</option>
-          <option value="clan">{{ $t('government_clan') }}</option>
-          <option value="herder">{{ $t('government_herder') }}</option>
-          <option value="japan_administrative">{{ $t('government_japan_administrative') }}</option>
-          <option value="japan_feudal">{{ $t('government_japan_feudal') }}</option>
-          <option value="landless">{{ $t('government_landless') }}</option>
-          <option value="mandala">{{ $t('government_mandala') }}</option>
-          <option value="meritocratic">{{ $t('government_meritocratic') }}</option>
-          <option value="nomad">{{ $t('government_nomad') }}</option>
-          <option value="republic">{{ $t('government_republic') }}</option>
-          <option value="theocracy">{{ $t('government_theocracy') }}</option>
-          <option value="tribal">{{ $t('government_tribal') }}</option>
-          <option value="steppe_admin">{{ $t('government_steppe_admin') }}</option>
-          <option value="wanua">{{ $t('government_wanua') }}</option>
-        </select>
+
+        <VueSelect v-model="selectedMask" :options="governmentList" :isClearable=false>
+          <template #option="{ option }">
+            <img :src="`/public/interface/government/${option.icon}`" alt="" width="24" height="24"/>
+            {{ $t('government_' + option.value) }}
+          </template>
+          <template #value="{ option }">
+            <img :src="`/public/interface/government/${option.icon}`" alt="" width="24" height="24"/>
+            {{ $t('government_' + option.value) }}
+          </template>
+        </VueSelect>
+
       </div>
     </div>
     <div class="preview-landed-title-canvas">
@@ -191,6 +181,8 @@
 
 <script setup>
 import { ref, onMounted, watch, nextTick } from 'vue'
+import VueSelect from "vue3-select-component";
+import "vue3-select-component/styles";
 
 // Utilise les chemins du dossier public
 const housePng = import.meta.env.BASE_URL + 'coat_of_arms/interface/house.png'
@@ -216,6 +208,25 @@ const defaultWidth = 128
 const defaultHeight = 128
 const defaultCoatWidth = 128
 const defaultCoatHeight = 128
+
+const governmentList = ref([
+    {value: 'default', icon: 'feudal.png'},
+    {value: 'administrative', icon: 'administrative.png'},
+    {value: 'celestial', icon: 'celestial.png'},
+    {value: 'clan', icon: 'clan.png'},
+    {value: 'herder', icon: 'herder.png'},
+    {value: 'japan_administrative', icon: 'japan_administrative.png'},
+    {value: 'japan_feudal', icon: 'japan_feudal.png'},
+    {value: 'landless', icon: 'landless_adventurer.png'},
+    {value: 'mandala', icon: 'mandala.png'},
+    {value: 'meritocratic', icon: 'meritocratic.png'},
+    {value: 'nomad', icon: 'nomad.png'},
+    {value: 'republic', icon: 'republic.png'},
+    {value: 'theocracy', icon: 'theocracy.png'},
+    {value: 'tribal', icon: 'tribal.png'},
+    {value: 'steppe_admin', icon: 'steppe_admin.png'},
+    {value: 'wanua', icon: 'wanua.png'}
+]);
 
 const selectedMask = ref('default')
 const maskImages = ref({
@@ -296,25 +307,9 @@ onMounted(() => {
   imgTitleMask.src = titleMaskPng
   imgTitleMask.onload = () => (titleMaskImage.value = imgTitleMask)
 
-  // Dynamic loading
-  const maskTypes = ['default',
-    'administrative',
-    'celestial',
-    'clan',
-    'herder',
-    'japan_administrative',
-    'japan_feudal',
-    'landless',
-    'mandala',
-    'meritocratic',
-    'nomad',
-    'republic',
-    'theocracy',
-    'tribal',
-    'steppe_admin',
-    'wanua']
+  governmentList.value.forEach((g) => {
 
-  maskTypes.forEach((maskType) => {
+    var maskType = g.value;
     // Masks
     const img = new window.Image()
     img.src = import.meta.env.BASE_URL + `coat_of_arms/interface/${maskType}_mask.png`
@@ -343,7 +338,8 @@ onMounted(() => {
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: 32px;
+  gap: 10%;
+  width: 100%;
   margin-bottom: 8px;
 }
 .preview-row-top {
@@ -392,7 +388,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-width: 180px;
+  min-width: 200px;
 }
 .mask-select-col {
   display: flex;
@@ -400,19 +396,11 @@ onMounted(() => {
   align-items: stretch;
   gap: 4px;
   margin-bottom: 8px;
-  width: 160px;
   margin-left: 8px;
 }
 .mask-label {
   text-align: center;
   font-weight: 500;
-}
-.mask-select {
-  width: 100%;
-  min-width: 0;
-  max-width: 160px;
-  height: 38px;
-  box-sizing: border-box;
 }
 .preview-canvas :deep(.konvajs-content) {
   pointer-events: none !important;

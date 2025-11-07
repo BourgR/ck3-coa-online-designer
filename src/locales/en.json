@@ -40,7 +40,7 @@
   "position_X": "Position X",
   "position_Y": "Position Y",
   "government_type": "Government",
-  "government_default": "Default",
+  "government_default": "Feudal",
   "government_administrative": "Administrative",
   "government_celestial": "Celestial",
   "government_clan": "Clan",
