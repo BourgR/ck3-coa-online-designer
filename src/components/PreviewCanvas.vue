@@ -1,194 +1,204 @@
 <template>
   <!-- Ligne 1 : preview house + preview title, centrées verticalement -->
-  <div class="preview-row preview-row-top">
-    <div class="preview-house-canvas">
-      <v-stage :config="{ width: houseWidth, height: houseHeight }">
-        <v-layer>
-          <v-group
-            :config="{
-              x: (houseWidth - houseCoatSize) / 2,
-              y: (houseHeight - houseCoatSize) / 2,
-              width: houseCoatSize,
-              height: houseCoatSize,
-              listening: false
-            }"
-          >
-            <v-image
-              v-if="previewImg"
+  <div class="preview-row-top preview-row row">
+    <div class="col-6">
+      <div class="preview-house-canvas">
+        <v-stage :config="{ width: houseWidth, height: houseHeight }">
+          <v-layer>
+            <v-group
               :config="{
-                image: previewImg,
-                x: 0,
-                y: 0,
+                x: (houseWidth - houseCoatSize) / 2,
+                y: (houseHeight - houseCoatSize) / 2,
                 width: houseCoatSize,
                 height: houseCoatSize,
                 listening: false
               }"
-            />
-          </v-group>
-          <v-image
-            v-if="houseMaskImage"
-            :config="{
-              image: houseMaskImage,
-              x: 0,
-              y: 0,
-              width: houseWidth,
-              height: houseHeight,
-              globalCompositeOperation: 'destination-in',
-              listening: false
-            }"
-          />
-          <v-image
-            v-if="houseImage"
-            :config="{
-              x: 0,
-              y: 0,
-              image: houseImage,
-              listening: false,
-            }"
-          />
-        </v-layer>
-      </v-stage>
-    </div>
-    <div class="preview-title-canvas">
-      <v-stage :config="{ width: titleWidth, height: titleHeight }">
-        <v-layer>
-          <v-group
-            :config="{
-              x: (titleWidth - titleCoatSize) / 2,
-              y: (titleHeight - titleCoatSize) / 2,
-              width: titleCoatSize,
-              height: titleCoatSize,
-              listening: false
-            }"
-          >
-            <v-image
-              v-if="previewImg"
-              :config="{
-                image: previewImg,
-                x: 0,
-                y: 0,
-                width: titleCoatSize,
-                height: titleCoatSize,
-                listening: false
-              }"
-            />
-          </v-group>
-          <v-image
-            v-if="titleMaskImage"
-            :config="{
-              image: titleMaskImage,
-              x: 0,
-              y: 0,
-              width: titleWidth,
-              height: titleHeight,
-              globalCompositeOperation: 'destination-in',
-              listening: false
-            }"
-          />
-          <v-image
-            v-if="titleImage"
-            :config="{
-              x: 0,
-              y: 0,
-              image: titleImage,
-              listening: false,
-            }"
-          />
-        </v-layer>
-      </v-stage>
-    </div>
-  </div>
-  <!-- Ligne 2 : dropbox + preview landed-title -->
-  <div class="preview-row preview-row-bottom">
-    <div class="dropbox-container">
-      <div class="mask-select-col">
-        <label for="mask-select" class="mask-label">{{ $t('government_type') }}</label>
-
-        <VueSelect v-model="selectedMask" :options="governmentList" :isClearable=false>
-          <template #option="{ option }">
-            <img :src="`${option.icon}`" alt="" width="24" height="24"/>
-            {{ $t('government_' + option.value) }}
-          </template>
-          <template #value="{ option }">
-            <img :src="`${option.icon}`" alt="" width="24" height="24"/>
-            {{ $t('government_' + option.value) }}
-          </template>
-        </VueSelect>
-
-      </div>
-    </div>
-    <div class="preview-landed-title-canvas">
-      <div>
-        <v-stage :config="{ width: defaultWidth, height: defaultHeight }">
-          <v-layer>
-            <v-image
-              :config="{
-                x: 0,
-                y: 0,
-                image: currentShadowImage,
-                listening: false,
-              }"
-            />
-            <v-group
-              ref="coaGroup"
-              :config="{
-                x: 0,
-                y: 0,
-                width: defaultCoatWidth,
-                height: defaultCoatHeight,
-                listening: false
-              }"
             >
-              <!-- We define a background, so if the offseting/scaling doesn't fill the mask
-               completely (ex: meritocratic khanate) at least a color is shown
-               CK3 seems to use the same hacky thing -->
-              <v-rect
-                :config="{
-                  x: 0,
-                  y: 0,
-                  width: defaultCoatWidth,
-                  height: defaultCoatHeight,
-                  fill: props.patternColors?.[0]|| 'black',
-                  listening: false
-                }"
-              />
-
-              <!-- Preview of the coat of arms -->
               <v-image
                 v-if="previewImg"
                 :config="{
                   image: previewImg,
-                  x: selectedGovernment.x,
-                  y: selectedGovernment.y,
-                  width: selectedGovernment.width,
-                  height: selectedGovernment.height,
-                  listening: false
-                }"
-              />
-              <v-image
-                v-if="currentMaskImage"
-                :config="{
-                  image: currentMaskImage,
                   x: 0,
                   y: 0,
-                  width: defaultWidth,
-                  height: defaultHeight,
-                  globalCompositeOperation: 'destination-in',
+                  width: houseCoatSize,
+                  height: houseCoatSize,
                   listening: false
                 }"
               />
             </v-group>
             <v-image
-              v-if="topFrameImage"
+              v-if="houseMaskImage"
+              :config="{
+                image: houseMaskImage,
+                x: 0,
+                y: 0,
+                width: houseWidth,
+                height: houseHeight,
+                globalCompositeOperation: 'destination-in',
+                listening: false
+              }"
+            />
+            <v-image
+              v-if="houseImage"
               :config="{
                 x: 0,
-                y: -10,
-                image: topFrameImage,
+                y: 0,
+                image: houseImage,
                 listening: false,
               }"
             />
           </v-layer>
         </v-stage>
+      </div>
+    </div>
+
+    <div class="col-6">
+      <div class="preview-title-canvas">
+        <v-stage :config="{ width: titleWidth, height: titleHeight }">
+          <v-layer>
+            <v-group
+              :config="{
+                x: (titleWidth - titleCoatSize) / 2,
+                y: (titleHeight - titleCoatSize) / 2,
+                width: titleCoatSize,
+                height: titleCoatSize,
+                listening: false
+              }"
+            >
+              <v-image
+                v-if="previewImg"
+                :config="{
+                  image: previewImg,
+                  x: 0,
+                  y: 0,
+                  width: titleCoatSize,
+                  height: titleCoatSize,
+                  listening: false
+                }"
+              />
+            </v-group>
+            <v-image
+              v-if="titleMaskImage"
+              :config="{
+                image: titleMaskImage,
+                x: 0,
+                y: 0,
+                width: titleWidth,
+                height: titleHeight,
+                globalCompositeOperation: 'destination-in',
+                listening: false
+              }"
+            />
+            <v-image
+              v-if="titleImage"
+              :config="{
+                x: 0,
+                y: 0,
+                image: titleImage,
+                listening: false,
+              }"
+            />
+          </v-layer>
+        </v-stage>
+      </div>
+    </div>
+  </div>
+  <!-- Ligne 2 : dropbox + preview landed-title -->
+  <div class="preview-row preview-row-bottom row">
+    <div class="col-6">
+      <div class="dropbox-container">
+        <div class="mask-select-col">
+          <label for="mask-select" class="mask-label">{{ $t('government_type') }}</label>
+
+          <VueSelect v-model="selectedMask" :options="governmentList" :isClearable=false>
+            <template #option="{ option }">
+              <img :src="`${option.icon}`" alt="" width="24" height="24"/>
+              {{ $t('government_' + option.value) }}
+            </template>
+            <template #value="{ option }">
+              <img :src="`${option.icon}`" alt="" width="24" height="24"/>
+              {{ $t('government_' + option.value) }}
+            </template>
+          </VueSelect>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6">
+      <div class="preview-landed-title-canvas">
+        <div>
+          <v-stage :config="{ width: defaultWidth, height: defaultHeight }">
+            <v-layer>
+              <v-image
+                :config="{
+                  x: 0,
+                  y: 0,
+                  image: currentShadowImage,
+                  listening: false,
+                }"
+              />
+              <v-group
+                ref="coaGroup"
+                :config="{
+                  x: 0,
+                  y: 0,
+                  width: defaultCoatWidth,
+                  height: defaultCoatHeight,
+                  listening: false
+                }"
+              >
+                <!-- We define a background, so if the offseting/scaling doesn't fill the mask
+                completely (ex: meritocratic khanate) at least a color is shown
+                CK3 seems to use the same hacky thing -->
+                <v-rect
+                  :config="{
+                    x: 0,
+                    y: 0,
+                    width: defaultCoatWidth,
+                    height: defaultCoatHeight,
+                    fill: props.patternColors?.[0]|| 'black',
+                    listening: false
+                  }"
+                />
+
+                <!-- Preview of the coat of arms -->
+                <v-image
+                  v-if="previewImg"
+                  :config="{
+                    image: previewImg,
+                    x: selectedGovernment.x,
+                    y: selectedGovernment.y,
+                    width: selectedGovernment.width,
+                    height: selectedGovernment.height,
+                    listening: false
+                  }"
+                />
+                <v-image
+                  v-if="currentMaskImage"
+                  :config="{
+                    image: currentMaskImage,
+                    x: 0,
+                    y: 0,
+                    width: defaultWidth,
+                    height: defaultHeight,
+                    globalCompositeOperation: 'destination-in',
+                    listening: false
+                  }"
+                />
+              </v-group>
+              <v-image
+                v-if="topFrameImage"
+                :config="{
+                  x: 0,
+                  y: -10,
+                  image: topFrameImage,
+                  listening: false,
+                }"
+              />
+            </v-layer>
+          </v-stage>
+        </div>
       </div>
     </div>
   </div>
@@ -365,13 +375,12 @@ const selectedGovernment = computed(() => {
 
 <style scoped>
 .preview-row {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 10%;
   width: 100%;
   margin-bottom: 8px;
+}
+
+.preview-row div {
+  margin: auto;
 }
 .preview-row-top {
   padding-top: 40px;
@@ -427,14 +436,14 @@ const selectedGovernment = computed(() => {
   align-items: stretch;
   gap: 4px;
   margin-bottom: 8px;
-  margin-left: 8px;
+  margin-left: 10px;
+  width: 80%;
+}
+.mask-select-col v-select {
+  max-width: 250px;
 }
 .mask-label {
   text-align: center;
   font-weight: 500;
-}
-.preview-canvas :deep(.konvajs-content) {
-  pointer-events: none !important;
-  user-select: none !important;
 }
 </style>
