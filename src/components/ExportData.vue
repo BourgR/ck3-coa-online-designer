@@ -124,7 +124,7 @@ const exportTextarea = ref(null)
 function copyToClipboard() {
   const textarea = exportTextarea.value
   if (textarea) {
-    // Utilise l'API Clipboard moderne si disponible
+    // Use modern Clipboard API if available
     if (navigator.clipboard) {
       navigator.clipboard.writeText(textarea.value)
     } else {

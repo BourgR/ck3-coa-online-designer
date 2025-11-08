@@ -351,14 +351,14 @@ function resetRotation(layerId) {
   recomputeWarnForLayerById(layerId)
 }
 
-// Tri d'affichage: plus petite depth en premier (au-dessus)
+// Sort layers: smaller depth first (on top)
 const sortedLayers = computed(() =>
   (props.canvasImages || [])
     .map((img, idx) => ({ img, idx }))
     .sort((a, b) => {
       const da = Number(a.img.depth ?? 0)
       const db = Number(b.img.depth ?? 0)
-      if (da !== db) return da - db // plus petit d'abord (au-dessus)
+      if (da !== db) return da - db // smaller first (on top)
       return b.idx - a.idx
     })
 )
@@ -368,7 +368,7 @@ watch(
   (layers) => {
     layers.forEach(layer => {
       const count = getLayerColorCount(layer.filename)
-      // Si les couleurs existent sur le layer, on les utilise
+      // If colors exist on the layer, use them
       if (!layerColors.value[layer.id]) {
         layerColors.value[layer.id] = []
         for (let i = 0; i < count; i++) {
@@ -382,7 +382,7 @@ watch(
           }
         }
       } else {
-        // Met à jour les couleurs si elles changent (ex: copie/coller)
+        // Update colors if they change (e.g. copy/paste)
         for (let i = 0; i < count; i++) {
           if (
             layer.colors &&
@@ -393,13 +393,13 @@ watch(
           }
         }
       }
-      // Init rotation si absent
+      // Init rotation if missing
       if (layerRotation.value[layer.id] === undefined) {
         layerRotation.value[layer.id] = layer.rotation ?? 0
       } else if (layer.rotation !== undefined && layerRotation.value[layer.id] !== layer.rotation) {
         layerRotation.value[layer.id] = layer.rotation
       }
-      // Init position si absent
+      // Init position if missing
       if (!layerPos.value[layer.id]) {
         layerPos.value[layer.id] = { x: layer.x ?? 0, y: layer.y ?? 0 }
       } else {
@@ -410,7 +410,7 @@ watch(
           layerPos.value[layer.id].y = layer.y
         }
       }
-      // Init stretch si absent
+      // Init stretch if missing
       if (!layerStretch.value[layer.id]) {
         layerStretch.value[layer.id] = {
           x: layer.width ?? 100,
@@ -424,7 +424,7 @@ watch(
           layerStretch.value[layer.id].y = layer.height
         }
       }
-      // Init mask si absent
+      // Init mask if missing
       if (!layerMask.value[layer.id]) {
         layerMask.value[layer.id] = {
           primary: layer.maskPrimary ?? false,
@@ -602,7 +602,7 @@ watch(locale, async () => {
   padding-right: 10px;
 }
 
-/* Assure l’affichage en ligne des colonnes même en style scoped */
+/* Ensure columns are displayed inline even in scoped style */
 .layer-grid .row {
   display: flex;
   flex-wrap: wrap;
@@ -618,7 +618,7 @@ watch(locale, async () => {
 .layer-grid .row > .col-6 { flex: 0 0 auto; width: 50%; }
 .layer-grid .row > .col-9 { flex: 0 0 auto; width: 75%; }
 
-/* Labels alignés à droite, sans forcer un retour à la ligne */
+/* Labels aligned right, without forcing a line break */
 .layer-grid .row label {
   display: block;
   width: 100%;
@@ -628,7 +628,7 @@ watch(locale, async () => {
   line-height: 1.2;
 }
 
-/* Empêche l’InputNumber de forcer le wrap */
+/* Prevent InputNumber from forcing wrap */
 .inline-input-number {
   width: 100%;
   min-width: 0;

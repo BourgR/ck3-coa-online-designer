@@ -48,7 +48,7 @@ const emit = defineEmits(['update:modelValue'])
 const showPicker = ref(false)
 const presets = Object.values(namedColors)
 
-// Met à jour la couleur si la prop change et le picker est fermé
+// Update color if prop changes and picker is closed
 watch(() => props.defaultColor, (val) => {
   if (!showPicker.value) emit('update:modelValue', val)
 })
@@ -93,7 +93,7 @@ onBeforeUnmount(() => {
   padding: 8px;
 }
 .picker-content {
-  /* Ajouté pour capturer tous les événements drag/mouse/touch */
+  /* Added to capture all drag/mouse/touch events */
   width: 100%;
   height: 100%;
 }

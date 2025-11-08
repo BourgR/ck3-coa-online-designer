@@ -204,7 +204,7 @@ onMounted(() => {
     }
   })
   images.value = arr
-  window.sidebarImages = arr // <-- expose les images globalement
+  window.sidebarImages = arr // <-- globally expose images
 
   emblems.value = emblemsData
   const cats = new Set(Object.values(emblems.value).map((e) => e.category))
@@ -303,7 +303,7 @@ watch(selectedPatternIndex, (i) => {
   padding-left: 12px;
 }
 
-/* Supprime la bordure bleue sur l'item sélectionné de l'accordion */
+/* Remove blue border on selected accordion item */
 :deep(.accordion-button:focus),
 :deep(.accordion-button:not(.collapsed)) {
   box-shadow: none !important;

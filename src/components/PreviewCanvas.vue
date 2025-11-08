@@ -1,5 +1,5 @@
 <template>
-  <!-- Ligne 1 : preview house + preview title, centrées verticalement -->
+  <!-- Row 1: house preview + title preview, vertically centered -->
   <div class="preview-row-top preview-row row">
     <div class="col-6">
       <div class="preview-house-canvas">
@@ -103,7 +103,8 @@
       </div>
     </div>
   </div>
-  <!-- Ligne 2 : dropbox + preview landed-title -->
+
+  <!-- Row 2: dropbox + preview landed-title -->
   <div class="preview-row preview-row-bottom row">
     <div class="col-6">
       <div class="dropbox-container">
@@ -209,7 +210,7 @@ import { ref, onMounted, watch, nextTick, computed } from 'vue'
 import VueSelect from "vue3-select-component";
 import "vue3-select-component/styles";
 
-// Utilise les chemins du dossier public
+// Use paths from the public folder
 const baseURL = import.meta.env.BASE_URL
 const housePng = baseURL + 'coat_of_arms/interface/house.png'
 const houseMaskPng = baseURL + 'coat_of_arms/interface/house_mask.png'
@@ -390,7 +391,7 @@ const selectedGovernment = computed(() => {
   margin-top: 28px;
   margin-bottom: 0;
 }
-/* Les cadres font 160px, le canvas interne garde sa taille d'origine */
+/* Frames are 160px, internal canvas keeps its original size */
 .preview-house-canvas {
   border: 1px solid #bbb;
   border-radius: 6px;

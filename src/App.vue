@@ -28,7 +28,8 @@
         />
       </div>
       <div class="col-4 canvas-center d-flex flex-column align-items-center justify-content-center">
-        <!-- ExportData bouton en haut à gauche, hors du flux du canvas -->
+
+        <!-- Toolbar -->
         <div class="toolbar-row">
           <ExportData
             :patternFileName="selectedPatternFileName"
@@ -40,7 +41,7 @@
             :canvas-size="stageSize"
             @import-data="handleImportData"
           />
-          <!-- Nouveau bouton reset -->
+          <!-- Reset button -->
           <button
             @click="showResetModal = true"
             class="btn btn-outline-danger"
@@ -119,7 +120,7 @@
               />
             </v-layer>
 
-            <!-- UI layer for transformer (unchanged) -->
+            <!-- UI layer for transformer -->
             <v-layer ref="uiLayerRef">
               <v-transformer
                 v-if="selectedIndex !== null && imageRefs[selectedIndex]"
@@ -144,7 +145,7 @@
             </v-layer>
           </v-stage>
         </div>
-        <!-- Preview non interactive -->
+        <!-- Non-interactive Preview -->
         <PreviewCanvas
           :preview-image="miniatureImage"
           :canvas-size="stageSize"
@@ -171,7 +172,7 @@
     </div>
   </div>
 
-  <!-- Modale de confirmation reset -->
+  <!-- Reset confirmation modal -->
   <div v-if="showResetModal" class="modal-backdrop">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -212,15 +213,12 @@ const imageRefs = ref([])
 const selectedPatternEl = ref(null)
 const draggedLayerIndex = ref(null)
 const stageRef = ref(null)
-// add missing layer ref so we can hook Konva draw events
 const layerRef = ref(null)
-// NEW: split layers
 const patternLayerRef = ref(null)
 const uiLayerRef = ref(null)
-// NEW: ref to the Transformer to avoid extra reactive renders during snapshot
 const transformerRef = ref(null)
 const showLangMenu = ref(false)
-// Languages list (extendable)
+
 const languages = ref([
   { code: 'fr', label: 'Français', flag: '🇫🇷' },
   { code: 'en', label: 'English', flag: '🇬🇧' },
@@ -236,22 +234,20 @@ const showResetModal = ref(false)
 const isImporting = ref(false)
 let copiedImage = null
 
-// Stocke l'URL originale du pattern pour toujours repartir de l'image source
 const originalPatternUrl = ref(null)
 const selectedPatternFileName = ref(null)
 
-// Valeurs par défaut pour les colorpickers du pattern
+// Colorpicker default values for patterns
 const defaultPatternColors = [namedColors.blue_light, namedColors.yellow_light, namedColors.green_light]
 const patternColors = ref([...defaultPatternColors])
 
-// Stocke les couleurs courantes pour chaque section
+// Store current colors for each section of the pattern
 const patternSectionColors = ref({
   primary: patternColors.value[0],
   secondary: patternColors.value[1],
   tertiary: patternColors.value[2]
 })
 
-// NEW: keep track of the first pattern as the app default
 const defaultPatternSnapshot = ref(null)
 
 // --- Functions ---
@@ -280,11 +276,11 @@ function setPattern(patternEl, filename) {
   selectedPatternEl.value = patternEl
   originalPatternUrl.value = patternEl?.src || null
   selectedPatternFileName.value = filename
-  // NEW: record the first pattern as default snapshot
+  // Record the first pattern as default snapshot
   if (!defaultPatternSnapshot.value && originalPatternUrl.value) {
     defaultPatternSnapshot.value = { url: originalPatternUrl.value, filename }
   }
-  // Recolorie le pattern avec les couleurs courantes à chaque changement de pattern
+  // Recolor the pattern with the current colors on each pattern change
   overridePatternAllColors()
 }
 
@@ -363,7 +359,7 @@ function onLayerDrop(targetIdx) {
   }
   draggedLayerIndex.value = null
 
-  // NEW: re-normalize depths so renderList follows the array order (frontmost last)
+  // re-normalize depths so renderList follows the array order (frontmost last)
   for (let i = 0; i < arr.length; i++) {
     arr[i].depth = (arr.length - 1) - i
   }
@@ -402,7 +398,7 @@ function copyExportToClipboard() {
 }
 
 function addImage(imgObj) {
-  // Détermine le nombre de couleurs par défaut selon assets/emblems.json
+  // Determine number of color to show based on assets/emblems.json
   const info = emblemsData[imgObj.filename]
   const colorCount = info?.colors ? Math.max(1, Math.min(3, info.colors)) : 1
   const defaultColors = ['#00008c', '#00ff80', '#ff008c']
@@ -413,18 +409,18 @@ function addImage(imgObj) {
   imgObj.maskPrimary = false
   imgObj.maskSecondary = false
   imgObj.maskTertiary = false
-  // conserve une version source (non masquée) pour recomposer le masque sans perte
+  // Keep a source version (unmasked) to reapply mask without quality loss
   imgObj.srcEl = imgObj.el
-  // profondeur par défaut
+  // default depth
   if (typeof imgObj.depth !== 'number') imgObj.depth = 0
-  // Ajout scaleX/scaleY
+  // Add scaleX/scaleY
   imgObj.scaleX = typeof imgObj.scaleX === 'number' ? imgObj.scaleX : 1
   imgObj.scaleY = typeof imgObj.scaleY === 'number' ? imgObj.scaleY : 1
   canvasImages.value.push(imgObj)
 }
 
 function onCanvasDragOver(e) {
-  // Permet le drop sur le canvas (sinon certains navigateurs ignorent l'événement drop)
+  // Allow drop on the canvas (otherwise some browsers ignore the drop event)
   e.preventDefault()
 }
 
@@ -440,10 +436,10 @@ function handleSidebarDrop(e) {
   const rect = e.currentTarget.getBoundingClientRect()
   const width = 100
   const height = 100
-  // Corrige la position pour centrer l'emblème avec offset
+  // Fix position to center emblem with offset
   const x = e.clientX - rect.left
   const y = e.clientY - rect.top
-  // Calcule le centre initial
+  // Calculate initial center
   const centerX = x
   const centerY = y
   const newImage = {
@@ -457,16 +453,16 @@ function handleSidebarDrop(e) {
     filename: imgObj.filename,
     centerX: centerX,
     centerY: centerY,
-    depth: 0, // par défaut
+    depth: 0,
   }
   addImage(newImage)
-  // Sélectionne automatiquement le nouvel élément
+  // Automatically select the new element
   nextTick(() => {
     selectedIndex.value = canvasImages.value.length - 1
   })
 }
 
-// Liste de rendu triée par profondeur (depth desc -> dessiné d'abord, donc derrière)
+// List sorted by depth (desc -> drawn first, thus behind)
 const renderList = computed(() => {
   const list = canvasImages.value
     .map((img, idx) => ({ img, idx }))
@@ -479,7 +475,7 @@ const renderList = computed(() => {
   return list
 })
 
-// NEW: precise hit-test selection without Konva hit graph
+// Pprecise hit-test selection without Konva hit graph
 function isPointInEmblem(img, px, py) {
   const cx = img.x
   const cy = img.y
@@ -580,7 +576,8 @@ function onStageMouseUp() {
   }
 }
 
-// Ajoute une fonction pour recolorier une image emblème selon ses couleurs
+// Add a function to recolor an emblem image according to its colors
+// Warning : praying that everything works cause I don't wanna redo this
 function recolorEmblemImage(imgEl, colors) {
   if (!imgEl) return imgEl
   const w = imgEl.width
@@ -611,17 +608,17 @@ function recolorEmblemImage(imgEl, colors) {
     const srcRgb = hexToRgb(src)
     const dstRgb = hexToRgb(dst)
     for (let i = 0; i < data.length; i += 4) {
-      // Vérifie si le pixel est dans la tolérance de la couleur de référence
+      // Check if the pixel is within the tolerance of the reference color
       if (
         Math.abs(data[i] - srcRgb[0]) < tolerance &&
         Math.abs(data[i + 1] - srcRgb[1]) < tolerance &&
         Math.abs(data[i + 2] - srcRgb[2]) < tolerance
       ) {
-        // Calcule la différence d'intensité par rapport à la couleur de référence
+        // Calculate the intensity difference relative to the reference color
         const srcLum = (srcRgb[0] + srcRgb[1] + srcRgb[2]) / 3
         const pxLum = (data[i] + data[i + 1] + data[i + 2]) / 3
         const lumRatio = srcLum === 0 ? 1 : pxLum / srcLum
-        // Applique la même variation à la couleur cible
+        // Apply the same variation to the target color
         data[i] = Math.max(0, Math.min(255, dstRgb[0] * lumRatio))
         data[i + 1] = Math.max(0, Math.min(255, dstRgb[1] * lumRatio))
         data[i + 2] = Math.max(0, Math.min(255, dstRgb[2] * lumRatio))
@@ -776,7 +773,7 @@ function applyEmblemMask(idx) {
   const hasMask = emblem.maskPrimary || emblem.maskSecondary || emblem.maskTertiary
   if (!hasMask) return
 
-  // image source non masquée à utiliser pour recomposition
+  // Source image not masked to use for recomposition
   const sourceImg = emblem.srcEl || emblem.el
   if (!sourceImg) return
 
@@ -793,19 +790,19 @@ function applyEmblemMask(idx) {
   const cosT = Math.cos(theta)
   const sinT = Math.sin(theta)
 
-  // canvas de sortie (emblème masqué)
+  // Output canvas (masked emblem)
   const emblemCanvas = document.createElement('canvas')
   emblemCanvas.width = width
   emblemCanvas.height = height
   const ectx = emblemCanvas.getContext('2d', { willReadFrequently: true })
   if (!ectx) return
 
-  // dessine la source non masquée sans rotation (on appliquera la rotation par calcul de coordonnées)
+  // Draw the unmasked source without rotation (rotation will be applied by coordinate calculation)
   ectx.drawImage(sourceImg, 0, 0, width, height)
   const emblemImgData = ectx.getImageData(0, 0, width, height)
   const eData = emblemImgData.data
 
-  // canvas du pattern (taille du stage), rendu 1 fois par application
+  // Pattern canvas (stage size), rendered once per application
   const patternCanvas = document.createElement('canvas')
   patternCanvas.width = stageW
   patternCanvas.height = stageH
@@ -816,7 +813,7 @@ function applyEmblemMask(idx) {
   const pImgData = pctx.getImageData(0, 0, stageW, stageH)
   const pData = pImgData.data
 
-  // couleurs à masquer
+  // Colors to mask
   const maskColors = []
   if (emblem.maskPrimary && patternColors.value[0]) maskColors.push(patternColors.value[0])
   if (emblem.maskSecondary && patternColors.value[1]) maskColors.push(patternColors.value[1])
@@ -831,7 +828,7 @@ function applyEmblemMask(idx) {
   }
   const maskRGBs = maskColors.map(hexToRgb)
 
-  // pour chaque pixel local (ex,ey) de l'emblème, trouve la coordonnée monde et teste le pattern
+  // For each local pixel (ex,ey) of the emblem, find the world coordinate and test the pattern
   for (let ey = 0; ey < height; ey++) {
     const ly = ey - height / 2
     for (let ex = 0; ex < width; ex++) {
@@ -848,7 +845,7 @@ function applyEmblemMask(idx) {
       const pg = pData[pi + 1]
       const pb = pData[pi + 2]
 
-      // test de correspondance avec l'une des couleurs masquées uniquement
+      // Check for a match with one of the masked colors only
       let transparent = false
       for (let k = 0; k < maskRGBs.length; k++) {
         const [mr, mg, mb] = maskRGBs[k]
@@ -864,7 +861,7 @@ function applyEmblemMask(idx) {
 
       if (transparent) {
         const ei = (ey * width + ex) << 2
-        eData[ei + 3] = 0 // alpha à 0
+        eData[ei + 3] = 0 // alpha to 0
       }
     }
   }
@@ -881,21 +878,21 @@ function applyEmblemMask(idx) {
   if (maskedImg.complete) maskedImg.onload()
 }
 
-// Ajoute une fonction pour override la couleur primaire du pattern
+// Add a function to override the primary color of the pattern
 function overridePatternPrimaryColor(newColor) {
   patternSectionColors.value.primary = newColor
   patternColors.value[0] = newColor
   overridePatternAllColors()
 }
 
-// Ajoute une fonction pour override la couleur secondaire du pattern
+// Add a function to override the secondary color of the pattern
 function overridePatternSecondaryColor(newColor) {
   patternSectionColors.value.secondary = newColor
   patternColors.value[1] = newColor
   overridePatternAllColors()
 }
 
-// Ajoute une fonction pour override la couleur tertiaire du pattern
+// Add a function to override the tertiary color of the pattern
 function overridePatternTertiaryColor(newColor) {
   patternSectionColors.value.tertiary = newColor
   patternColors.value[2] = newColor
@@ -928,7 +925,7 @@ function overridePatternAllColors() {
     const data = imgData.data
     const tolerance = 10
 
-    // Liste des recolorings à appliquer
+    // List of recolorings to apply
     const recolorings = [
       { src: '#ff0000', dst: patternSectionColors.value.primary },
       { src: '#ffff00', dst: patternSectionColors.value.secondary },
@@ -960,19 +957,19 @@ function overridePatternAllColors() {
 // --- Lifecycle ---
 
 onMounted(() => {
-  // Recolorie le pattern avec les couleurs par défaut dès l'arrivée sur la page
+  // Recolor the pattern with the default colors as soon as the page loads
   overridePatternAllColors()
   window.addEventListener('keydown', onKeyDown)
   nextTick(() => updateMiniatureImage())
 })
 
 function isCanvasFocused() {
-  // Vérifie si aucun input ou textarea n'est actif OU si le focus est sur le canvas
+  // Check if no input or textarea is active OR if the focus is on the canvas
   const active = document.activeElement
   if (!active) return true
   const tag = active.tagName?.toLowerCase()
   if (tag === 'input' || tag === 'textarea') return false
-  // Optionnel : vérifie si le canvas est actif (par id ou classe si besoin)
+  // Optional: check if the canvas is active (by id or class if needed)
   return true
 }
 
@@ -989,7 +986,7 @@ function onKeyDown(e) {
   if ((e.ctrlKey || e.metaKey) && e.key === 'v') {
     if (copiedImage) {
       e.preventDefault()
-      // Utilise la version instrumentée pour coller + tracer les perfs
+      // Use the instrumented version to paste + trace performance
       pasteCopiedImageWithPerf()
     }
   }
@@ -1007,8 +1004,6 @@ const miniatureDeps = computed(() => {
   ]).flat()
 })
 
-// REPLACE the deep watcher:
-// watch([canvasImages], () => { nextTick(() => updateMiniatureImage()) }, { deep: true })
 watch(miniatureDeps, () => {
   nextTick(() => updateMiniatureImage())
 })
@@ -1039,12 +1034,6 @@ function updateMiniatureImage() {
   })
 }
 
-// Met à jour la miniature à chaque changement du canevas principal
-// REMOVE the deep watch which reintroduced heavy traversal
-// watch([canvasImages], () => {
-//   nextTick(() => updateMiniatureImage())
-// }, { deep: true })
-
 function recomputeAllMasks() {
   canvasImages.value.forEach((img, idx) => {
     if (img.maskPrimary || img.maskSecondary || img.maskTertiary) {
@@ -1055,7 +1044,6 @@ function recomputeAllMasks() {
       nextTick(() => cacheImageNode(idx))
     }
   })
-  // removed global array refresh
 }
 
 // Keep a single centralized recompute after the pattern bitmap actually changes
@@ -1083,7 +1071,7 @@ onUnmounted(() => {
 function handleImportData({ patternFileName, patternColors: pColors, emblems }) {
   isImporting.value = true
 
-  // 1) Applique d'abord les couleurs importées
+  // 1) Apply imported colors first
   if (Array.isArray(pColors) && pColors.length) {
     const p1 = pColors[0] ?? patternColors.value[0]
     const p2 = pColors[1] ?? patternColors.value[1]
@@ -1092,7 +1080,7 @@ function handleImportData({ patternFileName, patternColors: pColors, emblems }) 
     patternSectionColors.value = { primary: p1, secondary: p2, tertiary: p3 }
   }
 
-  // 2) Charge pattern et emblèmes en parallèle
+  // 2) Load pattern and emblems in parallel
   let patternPromise = Promise.resolve(null)
   if (patternFileName) {
     patternPromise = new Promise(resolve => {
@@ -1114,15 +1102,15 @@ function handleImportData({ patternFileName, patternColors: pColors, emblems }) 
   }))
 
   Promise.all([patternPromise, ...emblemPromises]).then(async results => {
-    // 3) Applique le pattern chargé
+    // 3) Apply the loaded pattern
     const patImg = results[0]
     if (patImg) {
       setPattern(patImg, patternFileName)
-      // recoloration du pattern (overridePatternAllColors) déjà appelée dans setPattern
-      await new Promise(r => setTimeout(r, 0)) // attend le recoloring
+      // recoloration of the pattern (overridePatternAllColors) already called in setPattern
+      await new Promise(r => setTimeout(r, 0)) // wait for recoloring
     }
 
-    // 4) Prépare tous les emblèmes recolorés
+    // 4) Prepare all recolored emblems
     const loadedEmblems = []
     for (let i = 1; i < results.length; i++) {
       const { baseEl, e } = results[i]
@@ -1155,23 +1143,23 @@ function handleImportData({ patternFileName, patternColors: pColors, emblems }) 
       })
     }
 
-    // 5) Trie et normalise les layers
+    // 5) Sort and normalize layers
     loadedEmblems.sort((a, b) => Number(b.depth ?? 0) - Number(a.depth ?? 0))
     for (let i = 0; i < loadedEmblems.length; i++) {
       loadedEmblems[i].depth = (loadedEmblems.length - 1) - i
     }
 
-    // 6) Met à jour le state en une fois
+    // 6) Update state all at once
     canvasImages.value = loadedEmblems
 
-    // 7) Applique tous les masques en une seule passe
+    // 7) Apply all masks in one go
     await nextTick()
     for (let i = 0; i < canvasImages.value.length; i++) {
       const img = canvasImages.value[i]
       if (img.maskPrimary || img.maskSecondary || img.maskTertiary) {
         await new Promise(res => {
           applyEmblemMask(i)
-          // attend que l'image masquée soit chargée
+          // wait for the masked image to load
           const check = () => {
             if (canvasImages.value[i].el?.complete) res()
             else setTimeout(check, 10)
@@ -1181,7 +1169,7 @@ function handleImportData({ patternFileName, patternColors: pColors, emblems }) 
       }
     }
 
-    // 8) Fin de l'import
+    // 8) End of import
     isImporting.value = false
   })
 }
@@ -1203,7 +1191,7 @@ function confirmResetEmblem() {
     tertiary: defaultPatternColors[2],
   }
 
-  // NEW: restore the default pattern (first one used) if we have a snapshot
+  // restore the default pattern (first one used) if we have a snapshot
   if (defaultPatternSnapshot.value?.url) {
     const base = new window.Image()
     base.src = defaultPatternSnapshot.value.url
@@ -1266,7 +1254,7 @@ function pasteCopiedImageWithPerf() {
   })
 }
 
-// NEW: helper to detect clicks on the Transformer or its anchors
+// helper to detect clicks on the Transformer or its anchors
 function isTransformerTarget(konvaTarget) {
   const tr = transformerRef.value?.getNode?.()
   if (!tr || !konvaTarget) return false
@@ -1385,7 +1373,7 @@ function isTransformerTarget(konvaTarget) {
 }
 .icon-left-gap { margin-right: 6px; }
 
-/* Modale de confirmation reset */
+/* Reset confirmation modal */
 .modal-backdrop {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
